@@ -1,4 +1,3 @@
-import { render } from "@testing-library/react";
 import { useState } from "react"
 import Login from "./login"
 import Signup from "./signiup"
@@ -7,7 +6,6 @@ import Signup from "./signiup"
 const Auth = () => {
   const [showLoginPage, setShowLoginPage] = useState(true);
   const changeShowLoginPage = () => {
-    console.log("called")
     setShowLoginPage(!showLoginPage)
   };
 
