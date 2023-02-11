@@ -1,3 +1,4 @@
+import React from 'react'
 import {
   Box,
   Button,
@@ -13,17 +14,29 @@ import {
 
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 
-import { useState } from "react";
+import  { auth } from "../../firebase"
 
+import { useState } from "react";
 
 interface props  {
   changeShowLoginPage: () => void,
 }
 
+const ErrMsgs = {
+  NoInputEmailError: "メールアドレスを入力してください",
+  NoInputPasswordError: "パスワードの入力が必須です。",
+  NoInputConfirmationPasswordError: "確認用パスワードの入力が必須です。",
+  DiffentPasswordError: "確認用のパスワードと一致しません。再度入力し直してください。"
+}
+
 const Signup = (props: props) => {
-  const [userId, setUserId] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmationPassword, setConfirmationPasswordPassword] = useState("");
   const [showPassword, setshowPassword] = useState(false);
+
+  let errMsgs = [''];
+  let isError = false;
 
   const cardStyle = {
     display: "block",
@@ -38,8 +51,34 @@ const Signup = (props: props) => {
   }
 
   const handleSubmit = (e: any): void => {
+    checkInput();
+    setIsError(errMsgs.length > 0);
+    if (isError) {
+      return;
+    }
     e.preventDefault()
-    console.log(userId, password)
+    console.log(email, password)
+    auth.createUserWithEmailAndPassword(email, password)
+  }
+
+  const setIsError = (isError: boolean) => {
+    isError = isError
+  }
+
+  const checkInput = (): void => {
+    errMsgs = [""]
+    if (!email) {
+      errMsgs.push(ErrMsgs.NoInputEmailError);
+    }
+    if (!password) {
+      errMsgs.push(ErrMsgs.NoInputPasswordError);
+    }
+    if (!confirmationPassword) {
+      errMsgs.push(ErrMsgs.NoInputConfirmationPasswordError);
+    }
+    if (password != confirmationPassword) {
+      errMsgs.push(ErrMsgs.DiffentPasswordError);
+    }
   }
   
   return (
@@ -56,11 +95,11 @@ const Signup = (props: props) => {
               <TextField
               type={"text"}
               fullWidth
-              label="お名前"
+              label="メールアドレス"
               variant="outlined"
               margin="normal"
-              defaultValue={userId}
-              onChange={e => {setUserId(e.target.value)}}
+              defaultValue={email}
+              onChange={e => {setEmail(e.target.value)}}
               inputProps = {{style:{WebkitBoxShadow: "0 0 0 1000px white inset"}}}
               required
               />
@@ -95,8 +134,8 @@ const Signup = (props: props) => {
               label="確認用パスワード"
               variant="outlined"
               margin="normal"
-              defaultValue={password}
-              onChange={e => {setPassword(e.target.value)}}
+              defaultValue={confirmationPassword}
+              onChange={e => {setConfirmationPasswordPassword(e.target.value)}}
               inputProps = {{style:{WebkitBoxShadow: "0 0 0 1000px white inset"}}}
               InputProps={
                 {

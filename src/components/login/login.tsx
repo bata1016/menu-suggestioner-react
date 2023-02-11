@@ -1,3 +1,4 @@
+import React from 'react'
 import {
   Box,
   Button,
@@ -12,6 +13,7 @@ import {
 } from "@mui/material";
 
 import { Visibility, VisibilityOff } from "@mui/icons-material";
+import  { auth } from "../../firebase"
 
 import { useState } from "react";
 
@@ -19,22 +21,19 @@ interface props  {
   changeShowLoginPage: () => void,
 }
 
-const ErrorMessages = {
-  NoInputNameError: "名前を入力してください",
+const ErrMsgs = {
+  NoInputEmailError: "メールアドレスを入力してください",
   NoInputPasswordError: "パスワードの入力が必須です。",
-  NoInputConfirmationPasswordError: "確認用パスワードの入力が必須です。",
-  DiffentPasswordError: "確認用のパスワードと一致しません。再度入力し直してください。"
 }
 
 const Login = (props: props) => {
 
-  const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmationPassword, setConfirmationPassword] = useState("");
+  const [email, setEmail] = useState("");
   const [showPassword, setshowPassword] = useState(false);
 
 
-  let errorMessages = [''];
+  let errMsgs = [''];
   let isError = false;
 
   const cardStyle = {
@@ -50,31 +49,28 @@ const Login = (props: props) => {
   }
 
   const handleSubmit = (e: any): void => {
-    errorMessages = checkInput();
-    if (errorMessages.length >= 1) {
-      showErrorMesage();
-      return
+    checkInput();
+    setIsError(errMsgs.length >= 1);
+    if (isError) {
+      return;
     }
     e.preventDefault()
-    console.log(userName, password)
+    auth.signInWithEmailAndPassword(email, password)
   }
 
-  const showErrorMesage = () => {
-    isError = true
+  const setIsError = (isError: boolean) => {
+    isError = isError
   }
 
-  const checkInput = (): string[] => {
-    let errorMessages = ['']
-    if (!userName) {
-      errorMessages.push(ErrorMessages.NoInputNameError);
+  const checkInput = (): void => {
+    errMsgs = [""]
+    if (!email) {
+      errMsgs.push(ErrMsgs.NoInputEmailError);
     }
     if (!password) {
-      errorMessages.push(ErrorMessages.NoInputPasswordError);
+      errMsgs.push(ErrMsgs.NoInputPasswordError);
     }
-    if (password != confirmationPassword) {
-      errorMessages.push(ErrorMessages.NoInputConfirmationPasswordError);
-    }
-    return errorMessages;
+    return
   }
   
   return (
@@ -87,21 +83,21 @@ const Login = (props: props) => {
       <Card style={cardStyle}>
         <CardHeader title="ログイン" />
           <CardContent>
-              {/* {(errorMessages.length > 0) ? () => {
+              {/* {(errMsgs.length > 0) ? () => {
                 const items = [];
-                for (let i = 0; i < errorMessages.length; i++) {
-                    items.push(<p>{errorMessages[i]}</p>)
+                for (let i = 0; i < errMsgs.length; i++) {
+                    items.push(<p>{errMsgs[i]}</p>)
                 }
                 return <ul>{items}</ul>;
             }: null} */}
               <TextField
               type={"text"}
               fullWidth
-              label="お名前"
+              label="メールアドレス"
               variant="outlined"
               margin="normal"
-              defaultValue={userName}
-              onChange={e => {setUserName(e.target.value)}}
+              defaultValue={email}
+              onChange={e => {setEmail(e.target.value)}}
               inputProps = {{style:{WebkitBoxShadow: "0 0 0 1000px white inset"}}}
               required
               />
@@ -141,7 +137,7 @@ const Login = (props: props) => {
               </Button>
             </div>
           </CardActions>
-          <Link onClick={props.changeShowLoginPage}>ログインがお済みでない方はこちらをクリック</Link>
+          <Link onClick={props.changeShowLoginPage}>登録がお済みでない方はこちらをクリック</Link>
       </Card>
     </Box>
   )
