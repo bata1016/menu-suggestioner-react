@@ -23,6 +23,7 @@ interface props  {
 }
 
 const ErrMsgs = {
+  NoInputNameError: "ユーザー名を入力してください",
   NoInputEmailError: "メールアドレスを入力してください",
   NoInputPasswordError: "パスワードの入力が必須です。",
   NoInputConfirmationPasswordError: "確認用パスワードの入力が必須です。",
@@ -30,6 +31,7 @@ const ErrMsgs = {
 }
 
 const Signup = (props: props) => {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmationPassword, setConfirmationPasswordPassword] = useState("");
@@ -57,7 +59,7 @@ const Signup = (props: props) => {
       return;
     }
     e.preventDefault()
-    console.log(email, password)
+    console.log(name, email, password)
     auth.createUserWithEmailAndPassword(email, password)
   }
 
@@ -67,6 +69,9 @@ const Signup = (props: props) => {
 
   const checkInput = (): void => {
     errMsgs = [""]
+    if (!name) {
+      errMsgs.push(ErrMsgs.NoInputNameError);
+    }
     if (!email) {
       errMsgs.push(ErrMsgs.NoInputEmailError);
     }
@@ -92,64 +97,75 @@ const Signup = (props: props) => {
         <CardHeader title="アカウント新規作成" />
           <CardContent>
             <div>
-              <TextField
-              type={"text"}
-              fullWidth
-              label="メールアドレス"
-              variant="outlined"
-              margin="normal"
-              defaultValue={email}
-              onChange={e => {setEmail(e.target.value)}}
-              inputProps = {{style:{WebkitBoxShadow: "0 0 0 1000px white inset"}}}
-              required
+            <TextField
+                type={"text"}
+                fullWidth
+                label="ユーザー名"
+                variant="outlined"
+                margin="normal"
+                defaultValue={name}
+                onChange={e => {setName(e.target.value)}}
+                inputProps = {{style:{WebkitBoxShadow: "0 0 0 1000px white inset"}}}
+                required
               />
               <TextField
-              type={showPassword ? "text": "password"}
-              autoComplete={"false"}
-              fullWidth
-              label="登録するパスワード"
-              variant="outlined"
-              margin="normal"
-              defaultValue={password}
-              onChange={e => {setPassword(e.target.value)}}
-              inputProps = {{style:{WebkitBoxShadow: "0 0 0 1000px white inset"}}}
-              InputProps={
-                {
-                  endAdornment:
-                  <InputAdornment position="end" color="inherit">
-                    <IconButton
-                      onClick={handleShowPassword}
-                    >
-                      {showPassword ? <Visibility/ > : <VisibilityOff/ >}
-                    </IconButton>
-                  </InputAdornment>
-                }
-              }
-              required
+                type={"text"}
+                fullWidth
+                label="メールアドレス"
+                variant="outlined"
+                margin="normal"
+                defaultValue={email}
+                onChange={e => {setEmail(e.target.value)}}
+                inputProps = {{style:{WebkitBoxShadow: "0 0 0 1000px white inset"}}}
+                required
               />
               <TextField
-              type={showPassword ? "text": "password"}
-              autoComplete={"false"}
-              fullWidth
-              label="確認用パスワード"
-              variant="outlined"
-              margin="normal"
-              defaultValue={confirmationPassword}
-              onChange={e => {setConfirmationPasswordPassword(e.target.value)}}
-              inputProps = {{style:{WebkitBoxShadow: "0 0 0 1000px white inset"}}}
-              InputProps={
-                {
-                  endAdornment:
-                  <InputAdornment position="end" color="inherit">
-                    <IconButton
-                      onClick={handleShowPassword}
-                    >
-                      {showPassword ? <Visibility/ > : <VisibilityOff/ >}
-                    </IconButton>
-                  </InputAdornment>
+                type={showPassword ? "text": "password"}
+                autoComplete={"false"}
+                fullWidth
+                label="登録するパスワード"
+                variant="outlined"
+                margin="normal"
+                defaultValue={password}
+                onChange={e => {setPassword(e.target.value)}}
+                inputProps = {{style:{WebkitBoxShadow: "0 0 0 1000px white inset"}}}
+                InputProps={
+                  {
+                    endAdornment:
+                    <InputAdornment position="end" color="inherit">
+                      <IconButton
+                        onClick={handleShowPassword}
+                      >
+                        {showPassword ? <Visibility/ > : <VisibilityOff/ >}
+                      </IconButton>
+                    </InputAdornment>
+                  }
                 }
-              }
-              required
+                required
+              />
+              <TextField
+                type={showPassword ? "text": "password"}
+                autoComplete={"false"}
+                fullWidth
+                label="確認用パスワード"
+                variant="outlined"
+                margin="normal"
+                defaultValue={confirmationPassword}
+                onChange={e => {setConfirmationPasswordPassword(e.target.value)}}
+                inputProps = {{style:{WebkitBoxShadow: "0 0 0 1000px white inset"}}}
+                InputProps={
+                  {
+                    endAdornment:
+                    <InputAdornment position="end" color="inherit">
+                      <IconButton
+                        onClick={handleShowPassword}
+                      >
+                        {showPassword ? <Visibility/ > : <VisibilityOff/ >}
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                }
+                required
               />
             </div>
           </CardContent>
