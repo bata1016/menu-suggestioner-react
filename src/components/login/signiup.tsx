@@ -15,6 +15,7 @@ import {
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 import  { auth } from "../../firebase"
+import { signin } from '../../models/auth/auth';
 
 import { useState } from "react";
 
@@ -59,8 +60,8 @@ const Signup = (props: props) => {
       return;
     }
     e.preventDefault()
-    console.log(name, email, password)
-    auth.createUserWithEmailAndPassword(email, password)
+    console.log(name, email, password);
+    signin(email, password);
   }
 
   const setIsError = (isError: boolean) => {

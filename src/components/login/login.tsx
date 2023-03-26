@@ -13,9 +13,8 @@ import {
 } from "@mui/material";
 
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import  { auth } from "../../firebase"
-
 import { useState } from "react";
+import { login } from '../../models/auth/auth';
 
 interface props  {
   changeShowLoginPage: () => void,
@@ -55,7 +54,7 @@ const Login = (props: props) => {
       return;
     }
     e.preventDefault()
-    auth.signInWithEmailAndPassword(email, password)
+    login(email, password);
   }
 
   const setIsError = (isError: boolean) => {
